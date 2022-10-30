@@ -1,0 +1,45 @@
+- name: Install restic package
+  ansible.builtin.package:
+    name: restic
+    state: present
+  when:
+    - restic_install_repo and not restic_install_binary
+
+- name: Ensure bzip2 to unzip archive
+  ansible.builtin.package:
+    name: tar
+    state: present
+  when:
+    - restic_install_binary
+
+- name: Set restic_url
+  set_fact:
+    restic_url: 'https://github.com/restic/restic/releases/download/v{{ restic_install_version }}/restic_{{ restic_install_version }}_{{ ansible_system | lower }}_{{ restic_install_architecture }}.bz2'
+  when:
+    - restic_install_binary
+
+- name: Check if path exists
+  ansible.builtin.stat:
+    path: '{{ restic_install_binary_location }}/restic'
+  register: result
+  when:
+    - restic_install_binary
+
+- name: Download and extract restic archive
+  ansible.builtin.unarchive:
+    remote_src: yes
+    src: '{{ restic_url }}'
+    dest: '{{ restic_install_binary_location }}/restic'
+  when:
+    - restic_install_binary and not result.stat.exists
+
+- name: Ensure permissions are correct
+  file:
+    path: '{{ restic_install_binary_location }}/restic'
+    mode: '{{ restic_install_binary_perms }}'
+    owner: '{{ restic_user }}'
+    group: '{{ restic_user_group }}'
+  when:
+    - restic_install_binary
+
+...
