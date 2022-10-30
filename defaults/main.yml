@@ -16,6 +16,7 @@ restic_install_binary_location: /usr/local/bin
 restic_install_binary_perms: 0700
 restic_install_version: '0.14.0'
 restic_install_architecture: 'amd64'
+restic_install_download_location: '/tmp'
 
 # Restic backup configuration
 
@@ -32,11 +33,6 @@ restic_backup_default:
 #  restic_backup_s3_secret_access_key:
   restic_backup_repo_init: false
 #  restic_backup_password:
-  restic_backup_:
-  restic_backup_:
-  restic_backup_:
-   
-
 # Merge configs
 # Merger DANS une liste (pour avoir plusieurs configurations possibles)
 
