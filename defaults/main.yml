@@ -13,28 +13,32 @@ restic_user_group: restic
 restic_install_repo: true
 restic_install_binary: false
 restic_install_binary_location: /usr/local/bin
-restic_install_binary_perms: 0700
+restic_install_binary_perms: '0700'
 restic_install_version: '0.14.0'
 restic_install_architecture: 'amd64'
 restic_install_download_location: '/tmp'
 
 # Restic backup configuration
 
-restic_backup_default:
-  restic_backup_systemd: true
-  restic_backup_systemd_service_location: /etc/systemd/user
-  restic_backup_systemd_timer_location: /etc/systemd/user
-  restic_backup_systemd_timer_plan: daily
-  restic_backup_cron: false
-  restic_backup_cron_plan: 0 0 * * *
-#  restic_backup_repo:
-#  restic_backup_repo_type:
-#  restic_backup_s3_access_key_id:
-#  restic_backup_s3_secret_access_key:
-  restic_backup_repo_init: false
-#  restic_backup_password:
-# Merge configs
-# Merger DANS une liste (pour avoir plusieurs configurations possibles)
+restic_backup_configs_location: /var/restic/
+restic_backup_configs_location_perms: 0700
+restic_backup_sh_location: /bin/sh
 
-restic_backup_parameters: {}
-restic_backup_combined: "{{ restic_backup_parameters_default | combine(restic_env_parameters) }}"
+restic_backup_name: restic_backup
+restic_backup_systemd: true
+restic_backup_systemd_service_location: /etc/systemd/system
+restic_backup_systemd_timer_location: /etc/systemd/system
+restic_backup_systemd_timer_plan: daily
+restic_backup_systemd_config_location: "{{ restic_backup_systemd_service_location }}/{{ restic_backup_name }}"
+restic_backup_cron: false
+restic_backup_cron_plan: 0 0 * * *
+restic_backup_systemd_cron_location: "/etc/default/{{ restic_backup_name }}"
+restic_backup_configs_perms: 0600
+restic_backup_filestobackup:
+restic_backup_config_default:
+  - RESTIC_COMPRESSION: auto
+  - RESTIC_CACHE_DIR: /var/restic/cache
+  - TMPDIR: /tmp
+
+restic_backup_config: {}
+restic_backup_config_combined: "{{ restic_backup_config_default | combine(restic_backup_config) }}"

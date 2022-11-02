@@ -1,0 +1,9 @@
+[Unit]
+Description='{{ restic_backup_name }}'
+
+[Timer]
+OnCalendar={{ restic_backup_systemd_timer_plan }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

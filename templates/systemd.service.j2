@@ -1,0 +1,15 @@
+[Unit]
+Description={{ restic_backup_name }}
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart={{ restic_backup_sh_location }} -c "{{ restic_install_binary_location }}/restic -q backup --files-from={{ restic_backup_filestobackup_dst }}"
+ExecStartPost={{ restic_backup_sh_location }} -c "{{ restic_install_binary_location }}/restic forget -q --prune --keep-daily {{ restic_backup_keep_daily }} --keep-weekly {{ restic_backup_keep_weekly }} --keep-monthly {{ restic_backup_keep_monthly }} --keep-yearly {{ restic_backup_keep_yearly }}"
+EnvironmentFile={{ restic_backup_config_location | default(restic_backup_systemd_config_location) }}.d/{{ restic_backup_name }}.env
+User={{ restic_user}}
+Group={{ restic_user_group }}
+
+[Install]
+WantedBy=multi-user.target
