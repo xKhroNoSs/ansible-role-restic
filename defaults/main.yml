@@ -25,6 +25,7 @@ restic_backup_configs_location_perms: 0700
 restic_backup_sh_location: /bin/sh
 
 restic_backup_name: restic_backup
+restic_backup_filestobackup_dst: /var/restic/{{ restic_backup_name }}
 restic_backup_systemd: true
 restic_backup_systemd_service_location: /etc/systemd/system
 restic_backup_systemd_timer_location: /etc/systemd/system
