@@ -55,6 +55,12 @@
         {{ param }}="{{ value }}"
         {% endfor %}
 
+  - name: Define restic binary location  
+    ansible.builtin.set_fact:
+      restic_install_binary_location: /usr/bin
+    when:
+      - not restic_install_binary
+
   - name: Create systemd service file 
     ansible.builtin.template:
       owner: "{{ restic_user }}"
@@ -76,28 +82,33 @@
   - name: Enable systemd timer file
     ansible.builtin.systemd:
       name: "{{ restic_backup_name }}.timer"
+      state: started
       enabled: yes
-
-  - name: Ensure no repo are already initalized
-    become_user: "{{ restic_user }}"
-    ansible.builtin.shell: 
-      cmd: ". {{ restic_backup_config_location | default(restic_backup_systemd_config_location) }}.d/{{ restic_backup_name }}.env && restic snapshots"
-    register: repo_init_check
-    ignore_errors: true
-    tags:
-      - never
-      - repo_init
-
-  - name: Init repo
-    become_user: "{{ restic_user }}"
-    ansible.builtin.shell: 
-      cmd: ". {{ restic_backup_config_location | default(restic_backup_systemd_config_location) }}.d/{{ restic_backup_name }}.env && restic init"
-    when:
-      - repo_init_check.rc != 0
-    tags:
-      - never
-      - repo_init
-
   when:
     - restic_backup_systemd
     - not restic_backup_cron
+
+- name: Ensure no repo are already initalized
+  become_user: "{{ restic_user }}"
+  ansible.builtin.shell: 
+    cmd: |
+      restic snapshots
+  environment: "{{ restic_backup_config_combined }}"
+  register: repo_init_check
+  ignore_errors: true
+  tags:
+    - never
+    - repo_init
+
+- name: Init repo
+  become_user: "{{ restic_user }}"
+  ansible.builtin.shell: 
+    cmd: |
+      restic init 
+  environment: "{{ restic_backup_config_combined }}"
+  when:
+    - repo_init_check.rc != 0
+  tags:
+    - never
+    - repo_init
+

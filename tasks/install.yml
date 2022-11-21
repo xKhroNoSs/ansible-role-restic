@@ -14,7 +14,7 @@
     - restic_install_binary
 
 - name: Set restic_url
-  set_fact:
+  ansible.builtin.set_fact:
     restic_url: 'https://github.com/restic/restic/releases/download/v{{ restic_install_version }}/restic_{{ restic_install_version }}_{{ ansible_system | lower }}_{{ restic_install_architecture }}.bz2'
   when:
     - restic_install_binary
