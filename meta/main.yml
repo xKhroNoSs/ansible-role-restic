@@ -1,0 +1,7 @@
+galaxy_info:
+  description: "Role to manage restic backup. Includes crontab and systemd timers planification"
+  role_name: ansible_role_restic
+  namespace: khronoss
+  author: "Hugo Nowacki"
+  license: MIT
+  min_ansible_version: "2"
