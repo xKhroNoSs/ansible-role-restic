@@ -2,6 +2,7 @@
   ansible.builtin.package:
     name: restic
     state: present
+    update_cache: true
   when:
     - restic_install_repo
     - not restic_install_binary
@@ -30,6 +31,9 @@
   ansible.builtin.get_url:
     url: '{{ restic_url }}'
     dest: '{{ restic_install_download_location }}/restic.bz2'
+    mode: 0500
+    owner: '{{ restic_user }}'
+    group: '{{ restic_group }}'
   when:
     - restic_install_binary
     - not result.stat.exists
@@ -43,7 +47,7 @@
     - not result.stat.exists
 
 - name: Remove downloaded file
-  file:
+  ansible.builtin.file:
     path: '{{ restic_install_download_location }}/restic'
     state: absent
   when:
@@ -61,31 +65,23 @@
     - restic_install_binary
     - not result.stat.exists
 
-- name: Test the binary
-  shell: "{{ restic_install_binary_location }}/restic version"
-  ignore_errors: true
-  register: restic_test_result
-  when:
-    - restic_install_binary
-    - not result.stat.exists
-
-- name: Remove faulty binary
-  file:
-    path: '{{ restic_install_binary_location }}/restic'
-    state: absent
-  when:
-    - restic_install_binary
-    - not result.stat.exists
-    - "'FAILED' in restic_test_result.stderr"
-
-- name: Fail if restic could not be installed
-  fail:
-    msg: |
-      Restic binary has been faulty and has been removed.
-      Try to re-run the role and make sure you have bzip2 installed!
-  when:
-    - restic_install_binary
-    - not result.stat.exists
-    - "'FAILED' in restic_test_result.stderr"
+- name: Block | Test the binary
+  block:
+    - name: Test the binary
+      ansible.builtin.command: "{{ restic_install_binary_location }}/restic version"
+      ignore_errors: true
+      register: restic_test_result
+      failed_when: restic_test_result.rc == 0 or restic_test_result.rc >= 2
+      when:
+        - restic_install_binary
+        - not result.stat.exists
+  rescue:
+    - name: Remove faulty binary
+      ansible.builtin.file:
+        path: '{{ restic_install_binary_location }}/restic'
+        state: absent
+      when:
+        - restic_install_binary
+        - not result.stat.exists
 
 ...

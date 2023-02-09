@@ -5,7 +5,7 @@
     create_home: "{{ restic_user_create_home }}"
     system: "{{ restic_user_system }}"
     home: "{{ restic_user_home }}"
-    shell: "{{ restic_user_shell}}"
+    shell: "{{ restic_user_shell }}"
     update_password: on_create
   when:
     - restic_user_create
