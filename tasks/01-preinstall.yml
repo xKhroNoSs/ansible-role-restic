@@ -1,5 +1,5 @@
 ---
-- name: Create restic user
+- name: Restic | Create restic user
   ansible.builtin.user:
     name: "{{ restic_user }}"
     create_home: "{{ restic_user_create_home }}"

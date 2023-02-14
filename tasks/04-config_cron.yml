@@ -1,0 +1,52 @@
+---
+- name: Restic | Debian - Install cron
+  ansible.builtin.apt:
+    name:
+      - cron
+    state: present
+    update_cache: true
+  when:
+    - ansible_os_family == "Debian"
+
+- name: Restic | RHEL - Install cron
+  ansible.builtin.yum:
+    name:
+      - cronie
+    state: present
+    update_cache: true
+  when:
+    - ansible_os_family == "RedHat"
+
+- name: Restic | Create cron script file
+  ansible.builtin.template:
+    src: templates/restic_cron_script.sh.j2
+    dest: '{{ restic_backup_cron_script_location }}'
+    owner: '{{ restic_user }}'
+    group: '{{ restic_user_group }}'
+    mode: '{{ restic_backup_cron_script_location_perms }}'
+
+- name: Restic | Create cron file
+  ansible.builtin.cron:
+    name: Restic cron
+    minute: "0"
+    user: ' {{ restic_user }}'
+    job: "/bin/sh {{ restic_backup_cron_script_location }} | logger -t restic"
+    cron_file: restic_cron
+
+- name: Restic | Debian - Ensure cron service is started
+  when:
+    - ansible_os_family == "Debian"
+  ansible.builtin.service:
+    name: cron
+    state: started
+    enabled: true
+
+- name: Restic | RHEL - Ensure cron service is started
+  when:
+    - ansible_os_family == "RedHat"
+  ansible.builtin.service:
+    name: crond
+    state: started
+    enabled: true
+
+...

@@ -1,6 +1,38 @@
 ---
-- ansible.builtin.include_tasks: preinstall.yml
-- ansible.builtin.include_tasks: install.yml
-- ansible.builtin.include_tasks: config.yml
+- name: Restic | Preinstall
+  ansible.builtin.include_tasks: 01-preinstall.yml
+
+- name: Restic | Install from repo
+  when:
+    - not restic_install_binary
+    - restic_install_repo
+  ansible.builtin.include_tasks: 02-install_from_repo.yml
+
+- name: Restic | Install binary
+  when:
+    - restic_install_binary
+  ansible.builtin.include_tasks: 02-install_binary.yml
+
+- name: Restic | Generic configuration
+  ansible.builtin.include_tasks: 03-config_generic.yml
+
+- name: Restic | Cron configuration
+  when:
+    - restic_backup_cron
+  ansible.builtin.include_tasks: 04-config_cron.yml
+
+- name: Restic | Systemd configuration
+  when:
+    - restic_backup_systemd
+    - not restic_backup_cron
+  ansible.builtin.include_tasks: 04-config_systemd.yml
+
+- name: Restic | Repo init
+  tags:
+    - never
+    - repo_init
+  ansible.builtin.include_tasks: 05-config_repo_init.yml
+
+# - name: Restic | Backup
 
 ...
