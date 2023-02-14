@@ -1,0 +1,26 @@
+---
+- name: Restic | Ensure restic backup config directory is present
+  ansible.builtin.file:
+    path: "{{ restic_backup_configs_location }}"
+    state: directory
+    owner: "{{ restic_user }}"
+    group: "{{ restic_user_group }}"
+    mode: "{{ restic_backup_configs_location_perms }}"
+
+- name: Restic | Ensure restic backup cache directory is present
+  ansible.builtin.file:
+    path: "{{ restic_backup_config_combined.RESTIC_CACHE_DIR }}"
+    state: directory
+    owner: "{{ restic_user }}"
+    group: "{{ restic_user_group }}"
+    mode: "{{ restic_backup_configs_location_perms }}"
+
+- name: Restic | Add files to backup
+  ansible.builtin.copy:
+    owner: "{{ restic_user }}"
+    group: "{{ restic_user_group }}"
+    content: "{{ restic_backup_filestobackup | join('\n') }}"
+    dest: "{{ restic_backup_filestobackup_dst }}"
+    mode: "{{ restic_backup_configs_perms }}"
+
+...

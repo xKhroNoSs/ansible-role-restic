@@ -1,0 +1,22 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Add restic user (needed for dir)
+      ansible.builtin.user:
+        name: restic
+        state: present
+      tags:
+        - always
+    - name: Restic | Ensure backup repo perms are correct
+      ansible.builtin.file:
+        path: /backup
+        state: directory
+        owner: restic
+        group: restic
+        mode: 0700
+      tags:
+        - always
+
+...

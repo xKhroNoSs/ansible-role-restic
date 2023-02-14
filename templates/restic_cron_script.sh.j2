@@ -1,0 +1,12 @@
+#!/bin/sh
+
+{% for param, value in restic_backup_config_combined.items() %}
+{{ param }}="{{ value }}"
+{% endfor %}
+
+
+echo "Restic backup"
+{{ restic_backup_sh_location }} -c "{{ restic_binary_location }}/restic -q backup --files-from={{ restic_backup_filestobackup_dst }}"
+
+echo "Restic forget + prune"
+{{ restic_backup_sh_location }} -c "{{ restic_binary_location }}/restic forget -q --prune --keep-daily {{ restic_backup_keep_daily }} --keep-weekly {{ restic_backup_keep_weekly }} --keep-monthly {{ restic_backup_keep_monthly }} --keep-yearly {{ restic_backup_keep_yearly }}"

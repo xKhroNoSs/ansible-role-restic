@@ -1,3 +1,4 @@
+---
 # Restic user creation
 
 restic_user_create: true
@@ -33,13 +34,16 @@ restic_backup_systemd_timer_plan: daily
 restic_backup_systemd_config_location: "{{ restic_backup_systemd_service_location }}/{{ restic_backup_name }}"
 restic_backup_cron: false
 restic_backup_cron_plan: 0 0 * * *
-restic_backup_systemd_cron_location: "/etc/default/{{ restic_backup_name }}"
+restic_backup_cron_script_location: /usr/local/bin/{{ restic_backup_name }}.sh
+restic_backup_cron_script_location_perms: 0700
 restic_backup_configs_perms: 0600
-restic_backup_filestobackup:
 restic_backup_config_default:
   - RESTIC_COMPRESSION: auto
   - RESTIC_CACHE_DIR: /var/restic/cache
   - TMPDIR: /tmp
 
+restic_binary_location: "{% if restic_install_binary %}{{ restic_install_binary_location }}{% else %}/usr/bin{% endif %}"
 restic_backup_config: {}
 restic_backup_config_combined: "{{ restic_backup_config_default | combine(restic_backup_config) }}"
+
+...

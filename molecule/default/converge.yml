@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include role"
+      ansible.builtin.include_role:
+        name: ansible-role-restic
+        apply:
+          tags: repo_init
+      tags:
+        - repo_init
+
+...

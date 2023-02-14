@@ -1,0 +1,71 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+
+lint: ansible-lint
+
+platforms:
+  - name: debian-11-binary-cron
+    image: geerlingguy/docker-debian11-ansible
+    command: /lib/systemd/systemd
+    pre_build_image: true
+    privileged: true
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+  - name: debian-11-repo-systemd
+    image: geerlingguy/docker-debian11-ansible
+    command: /lib/systemd/systemd
+    pre_build_image: true
+    privileged: true
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+  - name: rocky-9-binary-systemd
+    image: geerlingguy/docker-rockylinux9-ansible
+    command: /lib/systemd/systemd
+    pre_build_image: true
+    privileged: true
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+  - name: rocky-9-repo-cron
+    image: geerlingguy/docker-rockylinux9-ansible
+    command: /lib/systemd/systemd
+    pre_build_image: true
+    privileged: true
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      rocky-9-repo-cron:
+        restic_backup_cron: true
+      rocky-9-binary-systemd:
+        restic_install_binary: true
+      debian-11-binary-cron:
+        restic_install_binary: true
+        restic_backup_cron: true
+    group_vars:
+      all:
+        restic_backup_keep_hourly: 1
+        restic_backup_keep_daily: 1
+        restic_backup_keep_weekly: 7
+        restic_backup_keep_monthly: 30
+        restic_backup_keep_yearly: 60
+        restic_backup_filestobackup:
+          - "/root/"
+          - "/etc/"
+        restic_backup_config:
+          - RESTIC_REPOSITORY: "/backup"
+          - RESTIC_PASSWORD: 'superStrongPassword'
+
+verifier:
+  name: ansible
+
+...

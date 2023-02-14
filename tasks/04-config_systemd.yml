@@ -1,0 +1,44 @@
+- name: Restic | Ensure systemd config dir is present
+  ansible.builtin.file:
+    path: "{{ restic_backup_systemd_config_location }}.d"
+    state: directory
+    owner: "{{ restic_user }}"
+    group: "{{ restic_user_group }}"
+    mode: "{{ restic_backup_configs_location_perms }}"
+
+- name: Restic | Create env files backup config
+  ansible.builtin.copy:
+    owner: "{{ restic_user }}"
+    group: "{{ restic_user_group }}"
+    dest: "{{ restic_backup_systemd_config_location }}.d/{{ restic_backup_name }}.env"
+    mode: "{{ restic_backup_configs_perms }}"
+    content: |
+      {% for param, value in restic_backup_config_combined.items() %}
+      {{ param }}="{{ value }}"
+      {% endfor %}
+
+- name: Restic | Create systemd service file
+  ansible.builtin.template:
+    owner: "{{ restic_user }}"
+    group: "{{ restic_user_group }}"
+    src: templates/systemd.service.j2
+    dest: "{{ restic_backup_systemd_config_location }}.service"
+    mode: "{{ restic_backup_configs_perms }}"
+  notify: Restic_systemd_daemon_reload
+
+- name: Restic | Create systemd timer file
+  ansible.builtin.template:
+    owner: "{{ restic_user }}"
+    group: "{{ restic_user_group }}"
+    src: templates/systemd.timer.j2
+    dest: "{{ restic_backup_systemd_config_location }}.timer"
+    mode: "{{ restic_backup_configs_perms }}"
+  notify: Restic_systemd_daemon_reload
+
+- name: Restic | Enable systemd timer file
+  ansible.builtin.systemd:
+    name: "{{ restic_backup_name }}.timer"
+    state: started
+    enabled: true
+
+...

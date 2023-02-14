@@ -1,0 +1,75 @@
+- name: Restic | Debian - Ensure bz2 is installed
+  ansible.builtin.apt:
+    name:
+      - bzip2
+    state: present
+    update_cache: true
+  when:
+    - ansible_os_family == "Debian"
+
+- name: Restic | RHEL | RHEL - Ensure bz2 is installed
+  ansible.builtin.yum:
+    name:
+      - bzip2
+    state: present
+    update_cache: true
+  when:
+    - ansible_os_family == "RedHat"
+
+- name: Restic | Set restic_url
+  ansible.builtin.set_fact:
+    restic_url: "https://github.com/restic/restic/releases/download/\
+      v{{ restic_install_version }}/restic_{{ restic_install_version }}_{{ ansible_system | lower }}_{{ restic_install_architecture }}.bz2"
+
+- name: Restic | Check if restic is already installed
+  ansible.builtin.stat:
+    path: '{{ restic_install_binary_location }}/restic'
+  register: result
+
+- name: Restic | If restic binary not present, install it
+  when:
+    - not result.stat.exists
+  block:
+    - name: Restic ̀| Download restic binary
+      ansible.builtin.get_url:
+        url: '{{ restic_url }}'
+        dest: '{{ restic_install_download_location }}/restic.bz2'
+        mode: 0500
+        owner: '{{ restic_user }}'
+        group: '{{ restic_user_group }}'
+
+    - name: Restic | Decompress the binary
+      ansible.builtin.shell: "bzip2 -dc {{ restic_install_download_location }}/restic.bz2 > {{ restic_install_binary_location }}/restic"
+      args:
+        creates: '{{ restic_install_download_location }}/restic'
+
+    - name: Restic | Remove downloaded file
+      ansible.builtin.file:
+        path: '{{ restic_install_download_location }}/restic'
+        state: absent
+
+    - name: Restic | Ensure permissions are correct
+      ansible.builtin.file:
+        path: '{{ restic_install_binary_location }}/restic'
+        mode: '{{ restic_install_binary_perms }}'
+        owner: '{{ restic_user }}'
+        group: '{{ restic_user_group }}'
+
+- name: Restic | Test the binary
+  become: true
+  become_user: '{{ restic_user }}'
+  block:
+    - name: Restic | Test the binary
+      ansible.builtin.command: "{{ restic_install_binary_location }}/restic version"
+      ignore_errors: true
+      register: restic_test_result
+      failed_when: not restic_test_result.rc == 0
+      changed_when: false
+  rescue:
+    - name: Restic | Remove faulty binary
+      ansible.builtin.file:
+        path: '{{ restic_install_binary_location }}/restic'
+        state: absent
+      failed_when: true
+
+...

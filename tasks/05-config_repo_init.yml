@@ -1,0 +1,19 @@
+---
+- name: Restic | Ensure no repo is already initalized
+  become: true
+  become_user: "{{ restic_user }}"
+  ansible.builtin.command: '{{ restic_binary_location }}/restic check'
+  environment: "{{ restic_backup_config_combined }}"
+  register: repo_init_check
+  changed_when: false
+  failed_when: false
+
+- name: Restic | Init repo
+  become: true
+  become_user: "{{ restic_user }}"
+  ansible.builtin.command: '{{ restic_binary_location }}/restic init'
+  environment: "{{ restic_backup_config_combined }}"
+  when:
+    - repo_init_check.rc != 0
+
+...
