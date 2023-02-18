@@ -15,9 +15,9 @@ restic_install_repo: true
 restic_install_binary: false
 restic_install_binary_location: /usr/local/bin
 restic_install_binary_perms: '0700'
-restic_install_version: '0.14.0'
-restic_install_architecture: 'amd64'
-restic_install_download_location: '/tmp'
+restic_install_binary_version: '0.14.0'
+restic_install_binary_architecture: 'amd64'
+restic_install_binary_download_location: '/tmp'
 
 # Restic backup configuration
 
@@ -27,22 +27,35 @@ restic_backup_sh_location: /bin/sh
 
 restic_backup_name: restic_backup
 restic_backup_filestobackup_dst: /var/restic/{{ restic_backup_name }}
-restic_backup_systemd: true
-restic_backup_systemd_service_location: /etc/systemd/system
-restic_backup_systemd_timer_location: /etc/systemd/system
-restic_backup_systemd_timer_plan: daily
-restic_backup_systemd_config_location: "{{ restic_backup_systemd_service_location }}/{{ restic_backup_name }}"
-restic_backup_cron: false
-restic_backup_cron_plan: 0 0 * * *
-restic_backup_cron_script_location: /usr/local/bin/{{ restic_backup_name }}.sh
-restic_backup_cron_script_location_perms: 0700
+
 restic_backup_configs_perms: 0600
 restic_backup_config_default:
   - RESTIC_COMPRESSION: auto
   - RESTIC_CACHE_DIR: /var/restic/cache
   - TMPDIR: /tmp
 
+# Systemd vars
+
+restic_backup_systemd: true
+restic_backup_systemd_location: /etc/systemd/system
+restic_backup_systemd_timer_plan: daily
+restic_backup_systemd_config_location: "{{ restic_backup_systemd_location }}/{{ restic_backup_name }}"
+
+# Cron
+
+restic_backup_cron: false
+restic_backup_cron_plan_default:
+  minute: "0"
+  hour: "*"
+  day: "*"
+  month: "*"
+  weekday: "*"
+restic_backup_cron_script_location: /usr/local/bin/{{ restic_backup_name }}.sh
+restic_backup_cron_script_location_perms: 0700
+
 restic_binary_location: "{% if restic_install_binary %}{{ restic_install_binary_location }}{% else %}/usr/bin{% endif %}"
+restic_backup_cron_plan: {}
+restic_backup_cron_plan_combined: "{{ restic_backup_cron_plan_default | combine(restic_backup_cron_plan) }}"
 restic_backup_config: {}
 restic_backup_config_combined: "{{ restic_backup_config_default | combine(restic_backup_config) }}"
 

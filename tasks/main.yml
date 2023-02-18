@@ -33,6 +33,4 @@
     - repo_init
   ansible.builtin.include_tasks: 05-config_repo_init.yml
 
-# - name: Restic | Backup
-
 ...
