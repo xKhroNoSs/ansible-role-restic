@@ -28,7 +28,11 @@
 - name: Restic | Create cron file
   ansible.builtin.cron:
     name: Restic cron
-    minute: "0"
+    minute: '{{ restic_backup_cron_plan_combined.minute }}'
+    hour: '{{ restic_backup_cron_plan_combined.hour }}'
+    day: '{{ restic_backup_cron_plan_combined.day }}'
+    month: '{{ restic_backup_cron_plan_combined.month }}'
+    weekday: '{{ restic_backup_cron_plan_combined.weekday }}'
     user: ' {{ restic_user }}'
     job: "/bin/sh {{ restic_backup_cron_script_location }} | logger -t restic"
     cron_file: restic_cron

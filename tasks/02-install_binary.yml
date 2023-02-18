@@ -19,7 +19,7 @@
 - name: Restic | Set restic_url
   ansible.builtin.set_fact:
     restic_url: "https://github.com/restic/restic/releases/download/\
-      v{{ restic_install_version }}/restic_{{ restic_install_version }}_{{ ansible_system | lower }}_{{ restic_install_architecture }}.bz2"
+      v{{ restic_install_binary_version }}/restic_{{ restic_install_binary_version }}_{{ ansible_system | lower }}_{{ restic_install_binary_architecture }}.bz2"
 
 - name: Restic | Check if restic is already installed
   ansible.builtin.stat:
@@ -33,19 +33,19 @@
     - name: Restic ̀| Download restic binary
       ansible.builtin.get_url:
         url: '{{ restic_url }}'
-        dest: '{{ restic_install_download_location }}/restic.bz2'
+        dest: '{{ restic_install_binary_download_location }}/restic.bz2'
         mode: 0500
         owner: '{{ restic_user }}'
         group: '{{ restic_user_group }}'
 
     - name: Restic | Decompress the binary
-      ansible.builtin.shell: "bzip2 -dc {{ restic_install_download_location }}/restic.bz2 > {{ restic_install_binary_location }}/restic"
+      ansible.builtin.shell: "bzip2 -dc {{ restic_install_binary_download_location }}/restic.bz2 > {{ restic_install_binary_location }}/restic"
       args:
-        creates: '{{ restic_install_download_location }}/restic'
+        creates: '{{ restic_install_binary_download_location }}/restic'
 
     - name: Restic | Remove downloaded file
       ansible.builtin.file:
-        path: '{{ restic_install_download_location }}/restic'
+        path: '{{ restic_install_binary_download_location }}/restic'
         state: absent
 
     - name: Restic | Ensure permissions are correct
