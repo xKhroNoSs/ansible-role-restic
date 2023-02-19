@@ -40,5 +40,6 @@
     name: "{{ restic_backup_name }}.timer"
     state: started
     enabled: true
+  when: not ansible_check_mode
 
 ...
