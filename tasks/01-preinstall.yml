@@ -2,7 +2,8 @@
 - name: Restic | Create restic user
   ansible.builtin.user:
     name: "{{ restic_user }}"
-    groups: "{{ restic_user_group }}"
+    group: "{{ restic_user_group }}"
+    groups: "{{ restic_user_groups }}"
     create_home: "{{ restic_user_create_home }}"
     system: "{{ restic_user_system }}"
     home: "{{ restic_user_home }}"

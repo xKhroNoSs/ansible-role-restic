@@ -77,11 +77,12 @@ You can use the `repo_init` tag to init the repository.
 |-------------------------|--------|-------------------|--------------------------------------------|
 | restic_user_create      | bool   | true              | Create restic user                         |
 | restic_user             | string | restic            | Name of the restic user                    |
+| restic_user_group       | string | restic            | Restic user primary group                  |
+| restic_user_groups      | list   |                   | List of groups user will be added to       |
 | restic_user_shell       | string | /usr/sbin/nologin | Full path to the shell used by the user    |
 | restic_user_home        | string | /nonexistent      | Full path to the user's home directory |
 | restic_user_create_home | bool   | false             | Create home if it does not exist           |
 | restic_user_system      | bool   | true              | Specify if user should be a system user    |
-| restic_user_group       | string | restic            | Restic user primary group                  |
 
 #### Restic configuration variables
 

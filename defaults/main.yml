@@ -3,11 +3,12 @@
 
 restic_user_create: true
 restic_user: restic
+restic_user_group: restic
+restic_user_groups: []
 restic_user_shell: /usr/sbin/nologin
 restic_user_home: /nonexistent
 restic_user_create_home: false
 restic_user_system: true
-restic_user_group: restic
 
 # Restic install
 
