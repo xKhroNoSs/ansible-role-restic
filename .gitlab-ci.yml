@@ -16,5 +16,8 @@ before_script:
 
 Molecule:
   stage: Molecule
+  variables:
+    ANSIBLE_FORCE_COLOR: "1"
+    PY_COLORS: "1"
   script:
     - molecule test -- -t restic_repo_init
