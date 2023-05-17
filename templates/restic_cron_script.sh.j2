@@ -6,7 +6,7 @@
 
 
 echo "Restic backup"
-{{ restic_backup_sh_location }} -c "{{ restic_binary_location }}/restic -q backup --files-from={{ restic_backup_filestobackup_dst }}"
+{{ restic_binary_location }}/restic -q backup --files-from={{ restic_backup_filestobackup_dst }}
 
 echo "Restic forget + prune"
-{{ restic_backup_sh_location }} -c "{{ restic_binary_location }}/restic forget -q --prune{% for k,v in restic_backup_keep.items() if not v == omit %} --keep-{{ k }}={{ v }}{% endfor %}"
+{{ restic_binary_location }}/restic forget -q --prune{% for k,v in restic_backup_keep.items() if not v == omit %} --keep-{{ k }}={{ v }}{% endfor %}

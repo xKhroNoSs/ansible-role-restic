@@ -87,7 +87,6 @@ You can use the `restic_repo_init` tag to init the repository.
 |-----------------------------------------|--------|--------------------------------------|---------------------------------------------------------------|
 | restic_backup_configs_location          | string | /var/restic/                         | Path to restic cache dir                                      |
 | restic_backup_configs_location_perms    | int    | 0700                                 | Perms of the restic cache dir                                 |
-| restic_backup_sh_location               | string | /bin/sh                              | Path to the shell used to start restic                        |
 | restic_backup_name                      | string | restic_backup                        | Name of the Restic backup config                              |
 | restic_backup_filestobackup_dst         | string | /var/restic/{{ restic_backup_name }} | Path to the file containing the list of dirs/files to back up |
 | restic_backup_configs_perms             | int    | 0600                                 | Perms of the file containing the list of dirs/files to backup |

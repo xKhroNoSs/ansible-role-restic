@@ -24,7 +24,6 @@ restic_install_binary_download_location: '/tmp'
 
 restic_backup_configs_location: /var/restic/
 restic_backup_configs_location_perms: 0700
-restic_backup_sh_location: /bin/sh
 
 restic_backup_name: restic_backup
 restic_backup_filestobackup_dst: /var/restic/{{ restic_backup_name }}
