@@ -53,11 +53,10 @@ provisioner:
         restic_backup_cron: true
     group_vars:
       all:
-        restic_backup_keep_hourly: 1
-        restic_backup_keep_daily: 1
-        restic_backup_keep_weekly: 7
-        restic_backup_keep_monthly: 30
-        restic_backup_keep_yearly: 60
+        restic_backup_keep:
+          daily: 1
+          weekly: 7
+          monthly: 30
         restic_backup_filestobackup:
           - "/root/"
           - "/etc/"

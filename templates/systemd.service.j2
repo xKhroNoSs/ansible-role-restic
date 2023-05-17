@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 ExecStart={{ restic_backup_sh_location }} -c "{{ restic_binary_location }}/restic -q backup --files-from={{ restic_backup_filestobackup_dst }}"
-ExecStartPost={{ restic_backup_sh_location }} -c "{{ restic_binary_location }}/restic forget -q --prune --keep-daily {{ restic_backup_keep_daily }} --keep-weekly {{ restic_backup_keep_weekly }} --keep-monthly {{ restic_backup_keep_monthly }} --keep-yearly {{ restic_backup_keep_yearly }}"
+ExecStartPost={{ restic_backup_sh_location }} -c "{{ restic_binary_location }}/restic forget -q --prune{% for k,v in restic_backup_keep.items() if not v == omit %} --keep-{{ k }}={{ v }}{% endfor %}"
 EnvironmentFile={{ restic_backup_systemd_config_location }}.d/{{ restic_backup_name }}.env
 User={{ restic_user}}
 Group={{ restic_user_group }}

@@ -21,11 +21,12 @@ It also provides two methods to schedule backups :
 - name: Converge
   hosts: all
   vars:
-    restic_backup_keep_hourly: 1
-    restic_backup_keep_daily: 1
-    restic_backup_keep_weekly: 7
-    restic_backup_keep_monthly: 30
-    restic_backup_keep_yearly: 60
+    restic_backup_keep:
+      hourly: 1
+      daily: 1
+      weekly: 7
+      monthly: 30
+      yearly: 60
     restic_backup_filestobackup:
       - "/root/"
       - "/etc/"
@@ -47,11 +48,7 @@ You can use the `restic_repo_init` tag to init the repository.
 
 | Variable                               | Type   | Description                                                                                                                                                                                                                                        |
 |----------------------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| restic_backup_keep_hourly              | int    | How many hourly backup you want to keep after `restic prune`                                                                                                                                                                                       |
-| restic_backup_keep_daily               | int    | How many daily backup you want to keep after `restic prune`                                                                                                                                                                                        |
-| restic_backup_keep_weekly              | int    | How many weekly backup you want to keep after `restic prune`                                                                                                                                                                                       |
-| restic_backup_keep_monthly             | int    | How many monthly backup you want to keep after `restic prune`                                                                                                                                                                                      |
-| restic_backup_keep_yearly              | int    | How many yearly backup you want to keep after `restic prune`                                                                                                                                                                                       |
+| restic_backup_keep                     | dictionary | Snapshot removal policy as described in the [Restic documentation](https://restic.readthedocs.io/en/stable/060_forget.html#removing-snapshots-according-to-a-policy). `--keep-daily=1` becomes a dictionary entry with the key being `daily` and the value `1` (see example above).|
 | restic_backup_filestobackup            | list   | List of path to files/dirs you want to backup                                                                                                                                                                                                      |
 | restic_backup_config                   | list   | List containing env variables which should be used for restic. For example, if you are using S3, you should specify related vars here. [Restic documentation here](https://restic.readthedocs.io/en/latest/040_backup.html#environment-variables). |
 | restic_backup_config.RESTIC_REPOSITORY | string | Restic repository                                                                                                                                                                                                                                  |
