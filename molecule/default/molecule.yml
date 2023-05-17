@@ -2,13 +2,13 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: ${DRIVER:-docker}
 
 lint: ansible-lint
 
 platforms:
   - name: debian-11-binary-cron
-    image: geerlingguy/docker-debian11-ansible
+    image: docker.io/geerlingguy/docker-debian11-ansible
     command: /lib/systemd/systemd
     pre_build_image: true
     privileged: true
@@ -16,7 +16,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
   - name: debian-11-repo-systemd
-    image: geerlingguy/docker-debian11-ansible
+    image: docker.io/geerlingguy/docker-debian11-ansible
     command: /lib/systemd/systemd
     pre_build_image: true
     privileged: true
@@ -24,7 +24,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
   - name: rocky-9-binary-systemd
-    image: geerlingguy/docker-rockylinux9-ansible
+    image: docker.io/geerlingguy/docker-rockylinux9-ansible
     command: /lib/systemd/systemd
     pre_build_image: true
     privileged: true
@@ -32,7 +32,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
   - name: rocky-9-repo-cron
-    image: geerlingguy/docker-rockylinux9-ansible
+    image: docker.io/geerlingguy/docker-rockylinux9-ansible
     command: /lib/systemd/systemd
     pre_build_image: true
     privileged: true
