@@ -28,6 +28,8 @@ restic_backup_configs_location_perms: 0700
 restic_backup_name: restic_backup
 restic_backup_filestobackup_dst: /var/restic/{{ restic_backup_name }}
 
+restic_backup_forget_snapshots: true
+
 restic_backup_keep:
   hourly: "{{ restic_backup_keep_hourly|default(omit) }}"
   daily: "{{ restic_backup_keep_daily|default(omit) }}"

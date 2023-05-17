@@ -6,7 +6,9 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 ExecStart={{ restic_binary_location }}/restic -q backup --files-from={{ restic_backup_filestobackup_dst }}
+{% if restic_backup_forget_snapshots %}
 ExecStartPost={{ restic_binary_location }}/restic forget -q --prune{% for k,v in restic_backup_keep.items() if not v == omit %} --keep-{{ k }}={{ v }}{% endfor +%}
+{% endif %}
 EnvironmentFile={{ restic_backup_systemd_config_location }}.d/{{ restic_backup_name }}.env
 User={{ restic_user}}
 Group={{ restic_user_group }}

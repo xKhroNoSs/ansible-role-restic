@@ -8,5 +8,7 @@
 echo "Restic backup"
 {{ restic_binary_location }}/restic -q backup --files-from={{ restic_backup_filestobackup_dst }}
 
+{% if restic_backup_forget_snapshots %}
 echo "Restic forget + prune"
 {{ restic_binary_location }}/restic forget -q --prune{% for k,v in restic_backup_keep.items() if not v == omit %} --keep-{{ k }}={{ v }}{% endfor %}
+{% endif %}
