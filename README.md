@@ -90,6 +90,7 @@ You can use the `restic_repo_init` tag to init the repository.
 | restic_backup_name                      | string | restic_backup                        | Name of the Restic backup config                              |
 | restic_backup_filestobackup_dst         | string | /var/restic/{{ restic_backup_name }} | Path to the file containing the list of dirs/files to back up |
 | restic_backup_forget_snapshots          | bool   | true                                 | Should `restic forget` get run after systemd/cron runs?       |
+| restic_backup_global_flags              | string | -q                                   | Global flags to pass to restic, shown by `restic --help`      |
 | restic_backup_configs_perms             | int    | 0600                                 | Perms of the file containing the list of dirs/files to backup |
 | restic_backup_config                    | list   |                                      | List of all environment variables used by Restic              |
 | restic_backup_config.RESTIC_COMPRESSION | string | auto                                 | Enable/Disable Restic compression                             |

@@ -48,6 +48,7 @@ provisioner:
         restic_backup_cron: true
       rocky-9-binary-systemd:
         restic_install_binary: true
+        restic_backup_global_flags: ""
       debian-11-binary-cron:
         restic_install_binary: true
         restic_backup_cron: true
