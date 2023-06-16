@@ -30,7 +30,9 @@
 - name: Restic | Repo init
   tags:
     - never
-    - repo_init
+    - restic_repo_init
+  when:
+    - "'restic_repo_init' is in ansible_run_tags" 
   ansible.builtin.include_tasks: 05-config_repo_init.yml
 
 ...

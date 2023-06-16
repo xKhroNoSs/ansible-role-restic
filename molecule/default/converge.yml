@@ -6,8 +6,8 @@
       ansible.builtin.include_role:
         name: ansible-role-restic
         apply:
-          tags: repo_init
+          tags: restic_repo_init
       tags:
-        - repo_init
+        - restic_repo_init
 
 ...
