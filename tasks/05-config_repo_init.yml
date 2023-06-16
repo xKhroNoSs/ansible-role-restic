@@ -4,7 +4,7 @@
   become_user: "{{ restic_user }}"
   ansible.builtin.command: '{{ restic_binary_location }}/restic check'
   environment: "{{ restic_backup_config_combined }}"
-  register: repo_init_check
+  register: restic_repo_init_check
   changed_when: false
   failed_when: false
 
@@ -14,6 +14,6 @@
   ansible.builtin.command: '{{ restic_binary_location }}/restic init'
   environment: "{{ restic_backup_config_combined }}"
   when:
-    - repo_init_check.rc != 0
+    - restic_repo_init_check.rc != 0
 
 ...
