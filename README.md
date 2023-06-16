@@ -36,7 +36,7 @@ It also provides two methods to schedule backups :
     - ansible-role-restic
 ```
 
-You can use the `repo_init` tag to init the repository.
+You can use the `restic_repo_init` tag to init the repository.
 
 ## Role Variables
 
@@ -133,6 +133,6 @@ The role contains a default molecule scenario. The scenario deploy the role on d
 | Rocky 9   | Binary              | Systemd           |
 | Rocky 9   | Repo                | Cron              |
 
- It is integrated in the CI/CD with the `repo_init` tag.
+ It is integrated in the CI/CD with the `restic_repo_init` tag.
 
 
