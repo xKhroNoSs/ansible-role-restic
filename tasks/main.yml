@@ -28,11 +28,7 @@
   ansible.builtin.include_tasks: 04-config_systemd.yml
 
 - name: Restic | Repo init
-  tags:
-    - never
-    - restic_repo_init
-  when:
-    - "'restic_repo_init' is in ansible_run_tags"
+  when: "'restic_repo_init' in ansible_run_tags"
   ansible.builtin.include_tasks: 05-config_repo_init.yml
 
 ...
