@@ -16,7 +16,7 @@ restic_install_repo: true
 restic_install_binary: false
 restic_install_binary_location: /usr/local/bin
 restic_install_binary_perms: '0700'
-restic_install_binary_version: '0.14.0'
+restic_install_binary_version: '0.16.0'
 restic_install_binary_architecture: 'amd64'
 restic_install_binary_download_location: '/tmp'
 
